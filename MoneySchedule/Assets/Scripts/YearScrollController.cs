@@ -28,6 +28,8 @@ public class YearScrollController : MonoBehaviour {
 
 			WeekInputController wic = go.GetComponent<WeekInputController>();
 
+			wic.weekNumber = i + 1;
+
 			weeks[i] = go;
 			weekControllers[i] = wic;
 			activeWeeks[i] = true;
