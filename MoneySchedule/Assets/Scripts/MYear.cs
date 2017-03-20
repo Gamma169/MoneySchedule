@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class MYear : MonoBehaviour {
 
 	public int amountForYear;
-
+	public int activeWeeks = 52;
 
 	public OverallCalculator ovc;
 	public YearScrollController ysc;
@@ -19,7 +19,18 @@ public class MYear : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		UpdateActiveWeeks();
+		ovc.weeksToCalculate = activeWeeks;
+
+	}
 
 
+
+	public void UpdateActiveWeeks() {
+		activeWeeks = 0;
+		for (int i = 0; i < 52; i++) {
+			if (ysc.activeWeeks[i])
+				activeWeeks++;
+			}
 	}
 }
