@@ -18,8 +18,8 @@ public class WeekInputController : MonoBehaviour {
 	public int yearlyVariance;
 
 	public Text thisWeekDisplay;
-	public Text weeklyVarianceAmount;
-	public Text yearlyVarianceAmount;
+	public Text weeklyVarianceDisplay;
+	public Text yearlyVarianceDisplay;
 
 	private Text weekLabel;
 
@@ -30,6 +30,8 @@ public class WeekInputController : MonoBehaviour {
 
 	private bool firstUpdate = true;
 	private string loadValString = "";
+
+	private int weeklyVarianceAmount;
 
 	// Use this for initialization
 	void Start () {
@@ -71,21 +73,55 @@ public class WeekInputController : MonoBehaviour {
 				inputType = ERROR_INPUT;
 			}
 		}
+		weeklyVarianceAmount = amountMadeThisWeek - weeklyVariance;
 	}
 
 
 	public void UpdateDisplays() {
 		thisWeekDisplay.text = OverallCalculator.NumToMoneyString(amountMadeThisWeek);
 		if (inputType == GOOD_INPUT) {
-			weeklyVarianceAmount.text = OverallCalculator.NumToMoneyString(weeklyVariance);
-			yearlyVarianceAmount.text = OverallCalculator.NumToMoneyString(yearlyVariance);
+
+			if (weeklyVariance < 0) {
+				// pivot must be less than 1
+				float pivotLocation = 0.65f;
+				float slope = (1f / ((1f - pivotLocation) * (float)weeklyVarianceAmount));
+				weeklyVarianceDisplay.color = Color.Lerp(Color.red, Color.black, (slope * amountMadeThisWeek) - (pivotLocation / (1f - pivotLocation)));
+				//print((slope * amountMadeThisWeek) - (pivotLocation / (1f - pivotLocation)));
+			}
+			else if (weeklyVariance == 0)
+				weeklyVarianceDisplay.color = Color.black;
+			else {
+				// pivot must be less than 1
+				float pivotLocation = 0.35f;
+				float slope = (1f / ((1f - pivotLocation) * (float)weeklyVarianceAmount));
+				weeklyVarianceDisplay.color = Color.Lerp(Color.black, Color.green, (slope * (amountMadeThisWeek - weeklyVarianceAmount)) - (pivotLocation / (1f - pivotLocation)));
+			}
+			weeklyVarianceDisplay.text = OverallCalculator.NumToMoneyString(weeklyVariance);
+
+
+			if (yearlyVariance < 0) {
+				yearlyVarianceDisplay.color = Color.Lerp(Color.black, Color.red, -yearlyVariance / (0.75f * weeklyVarianceAmount));
+			}
+			else if (yearlyVariance == 0) {
+				yearlyVarianceDisplay.color = Color.black;
+			}
+			else {
+				yearlyVarianceDisplay.color = Color.Lerp(Color.black, Color.green, yearlyVariance / (0.75f * weeklyVarianceAmount));
+			}
+
+			yearlyVarianceDisplay.text = OverallCalculator.NumToMoneyString(yearlyVariance);
 		}
 		else if (inputType == NO_INPUT) {
-			weeklyVarianceAmount.text = "";
-			yearlyVarianceAmount.text = "";
+			weeklyVarianceDisplay.color = Color.black;
+			yearlyVarianceDisplay.color = Color.black;
+			weeklyVarianceDisplay.text = "";
+			yearlyVarianceDisplay.text = "";
 		}
 		else {
-		
+			weeklyVarianceDisplay.color = Color.red;
+			yearlyVarianceDisplay.color = Color.red;
+			weeklyVarianceDisplay.text = "Error:";
+			yearlyVarianceDisplay.text = "Bad Input";
 		}
 	}
 

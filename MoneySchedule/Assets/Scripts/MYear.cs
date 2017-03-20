@@ -51,7 +51,7 @@ public class MYear : MonoBehaviour {
 			yield return new WaitForSeconds(1);
 			if (!ovc.GetError()) {
 				SaveData();
-				print("saved");
+				//print("saved");
 			}
 		}
 	}
