@@ -18,6 +18,7 @@ public class OverallCalculator : MonoBehaviour {
 	public Text weekWordsDisplay;
 	public Text numWeeksDisplay;
 
+
 	//public Text label2;
 
 	private string enterNum = "Enter yearly amount to calculate weekly amount";
@@ -27,6 +28,7 @@ public class OverallCalculator : MonoBehaviour {
 	private Color errorCol = Color.red;
 
 	private int amount;
+	private bool error;
 
 	// Use this for initialization
 	void Start () {
@@ -76,6 +78,8 @@ public class OverallCalculator : MonoBehaviour {
 					weekWordsDisplay.color = regCol;
 					weekWordsDisplay.text = "If you work:" + spaces3 + "weeks a year";
 					numWeeksDisplay.text = "" + weeksToCalculate;
+
+					error = false;
 				}
 				else {
 					secondTextDisplay.color = errorCol;
@@ -86,6 +90,8 @@ public class OverallCalculator : MonoBehaviour {
 					weekWordsDisplay.color = errorCol;
 					weekWordsDisplay.text = "Please check at least one active week box to fix this error";
 					numWeeksDisplay.text = "";
+
+					error = true;
 				}
 
 				amount = a;
@@ -100,6 +106,7 @@ public class OverallCalculator : MonoBehaviour {
 				numWeeksDisplay.text = "";
 
 				amount = 0;
+				error = true;
 			}
 		}		
 	}
@@ -108,6 +115,9 @@ public class OverallCalculator : MonoBehaviour {
 		return amount;
 	}
 
+	public bool GetError() {
+		return error;
+	}
 
 	public static string NumToMoneyString(int num) {
 		string s = "";

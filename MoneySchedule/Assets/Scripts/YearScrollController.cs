@@ -16,6 +16,7 @@ public class YearScrollController : MonoBehaviour {
 	private int numWeeks;
 
 	private int weeklyAmount;
+
 	// Use this for initialization
 	void Start () {
 		rt = GetComponent<RectTransform>();
@@ -37,12 +38,11 @@ public class YearScrollController : MonoBehaviour {
 			weekControllers[i] = wic;
 			activeWeeks[i] = true;
 		}
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 		UpdateActiveWeeks();
 
 		if (numWeeks <= 0) {

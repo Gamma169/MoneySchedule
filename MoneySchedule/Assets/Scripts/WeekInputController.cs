@@ -11,7 +11,7 @@ public class WeekInputController : MonoBehaviour {
 
 
 	public int weekNumber;
-	public bool isActive = true;
+	public bool isActive;
 
 	public int amountMadeThisWeek;
 	public int weeklyVariance;
@@ -24,21 +24,33 @@ public class WeekInputController : MonoBehaviour {
 	private Text weekLabel;
 
 	private InputField input;
+	private Toggle tog;
 
 	private int inputType;
+
+	private bool firstUpdate = true;
+	private string loadValString = "";
 
 	// Use this for initialization
 	void Start () {
 		weekLabel = GetComponentInChildren<Text>();
 		input = GetComponent<InputField>();
+		tog = GetComponentInChildren<Toggle>();
 
 		weekLabel.text = "Week " + weekNumber;
+		tog.isOn = isActive;
+
+		firstUpdate = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		UpdateAmount();
 		UpdateDisplays();
+		if (firstUpdate) {
+			input.text = loadValString;
+			firstUpdate = false;
+		}
 	}
 
 
@@ -78,6 +90,19 @@ public class WeekInputController : MonoBehaviour {
 	}
 
 	public void ToggleActivate() {
-		isActive = !isActive;
+		if (!firstUpdate)
+			isActive = !isActive;
+	}
+
+	public bool GoodInput() {
+		return inputType == GOOD_INPUT;
+	}
+
+	public void SetAmount(int i) {
+		amountMadeThisWeek = i;
+		if (input != null)
+			input.text = "" + i;
+		else
+			loadValString = "" + i;
 	}
 }
