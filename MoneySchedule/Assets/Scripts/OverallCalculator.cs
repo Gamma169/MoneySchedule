@@ -89,7 +89,7 @@ public class OverallCalculator : MonoBehaviour {
 	}
 
 
-	public string NumToString(int num) {
+	public static string NumToString(int num) {
 		string s = "";
 		if (num < 0)
 			s += "-";

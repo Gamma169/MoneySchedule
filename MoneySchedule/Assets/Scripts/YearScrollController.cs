@@ -24,7 +24,7 @@ public class YearScrollController : MonoBehaviour {
 		for (int i = 0; i < 52; i++) {
 			GameObject go = Instantiate(weekInput, rt);
 			RectTransform rect = go.GetComponent<RectTransform>();
-			rect.anchoredPosition = new Vector2(i * 200 + 100, 10);
+			rect.anchoredPosition = new Vector2(i * 195 + 175, 16);
 
 			WeekInputController wic = go.GetComponent<WeekInputController>();
 
