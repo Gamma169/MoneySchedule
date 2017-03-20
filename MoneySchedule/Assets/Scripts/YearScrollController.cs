@@ -12,7 +12,10 @@ public class YearScrollController : MonoBehaviour {
 
 	private RectTransform rt;
 
+	private int yearAmount;
+	private int numWeeks;
 
+	private int weeklyAmount;
 	// Use this for initialization
 	void Start () {
 		rt = GetComponent<RectTransform>();
@@ -40,6 +43,43 @@ public class YearScrollController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+		UpdateActiveWeeks();
 
+		if (numWeeks <= 0) {
+			numWeeks = 1;
+		}
+
+		weeklyAmount = yearAmount / numWeeks;
+
+		UpdateWeeklyYearlyVariance();
+
+	}
+
+	public void UpdateActiveWeeks() {
+		numWeeks = 0;
+		for (int i = 0; i < activeWeeks.Length; i++) {
+			activeWeeks[i] = weekControllers[i].isActive;
+			if (activeWeeks[i])
+				numWeeks++;
+		}
+	}
+
+	public void UpdateWeeklyYearlyVariance() {
+		int currentYearVariance = 0;
+		for (int i = 0; i < weekControllers.Length; i++) {
+			int madeWeek = weekControllers[i].amountMadeThisWeek;
+			if (weekControllers[i].isActive) 
+				weekControllers[i].weeklyVariance = madeWeek - weeklyAmount;
+			else 
+				weekControllers[i].weeklyVariance = madeWeek;
+
+			currentYearVariance += weekControllers[i].weeklyVariance;
+			weekControllers[i].yearlyVariance = currentYearVariance;
+		
+		}
+	}
+
+	public void SetAmount(int newAmount) {
+		yearAmount = newAmount;
 	}
 }

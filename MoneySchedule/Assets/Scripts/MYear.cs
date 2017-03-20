@@ -11,6 +11,7 @@ public class MYear : MonoBehaviour {
 	public OverallCalculator ovc;
 	public YearScrollController ysc;
 
+
 	// Use this for initialization
 	void Start () {
 		
@@ -22,6 +23,8 @@ public class MYear : MonoBehaviour {
 		UpdateActiveWeeks();
 		ovc.weeksToCalculate = activeWeeks;
 
+		amountForYear = ovc.GetAmount();
+		ysc.SetAmount(amountForYear);
 	}
 
 

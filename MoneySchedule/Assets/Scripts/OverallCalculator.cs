@@ -26,6 +26,8 @@ public class OverallCalculator : MonoBehaviour {
 	private Color regCol = Color.black;
 	private Color errorCol = Color.red;
 
+	private int amount;
+
 	// Use this for initialization
 	void Start () {
 			
@@ -53,7 +55,7 @@ public class OverallCalculator : MonoBehaviour {
 			weekWordsDisplay.text = "";
 			numWeeksDisplay.text = "";
 
-			year.amountForYear = 0;
+			amount = 0;
 		}
 		else {
 
@@ -64,15 +66,29 @@ public class OverallCalculator : MonoBehaviour {
 				string spaces2 = "                                 ";
 				string spaces3 = "                                        ";
 				mainTextDisplay.text = "If you want to make:" + spaces1 + "a year";
-				overallMoneyDisplay.text = "$" + NumToString(a);
+				overallMoneyDisplay.text = NumToMoneyString(a);
 
-				secondTextDisplay.text = "You must make:" + spaces2 + "a week";
-				monthlyMoneyDisplay.text = "$" + NumToString(a/weeksToCalculate);
+				if (weeksToCalculate > 0) {
+					secondTextDisplay.color = regCol;
+					secondTextDisplay.text = "You must make:" + spaces2 + "a week";
+					monthlyMoneyDisplay.text = NumToMoneyString(a/weeksToCalculate);
 
-				weekWordsDisplay.text = "If you work:" + spaces3 + "weeks a year";
-				numWeeksDisplay.text = "" + weeksToCalculate;
+					weekWordsDisplay.color = regCol;
+					weekWordsDisplay.text = "If you work:" + spaces3 + "weeks a year";
+					numWeeksDisplay.text = "" + weeksToCalculate;
+				}
+				else {
+					secondTextDisplay.color = errorCol;
+					secondTextDisplay.text = "Error:  Must have at least one active week";
+					monthlyMoneyDisplay.text = "";
 
-				year.amountForYear = a;
+
+					weekWordsDisplay.color = errorCol;
+					weekWordsDisplay.text = "Please check at least one active week box to fix this error";
+					numWeeksDisplay.text = "";
+				}
+
+				amount = a;
 			}
 			catch  {
 				mainTextDisplay.color = errorCol;
@@ -83,32 +99,40 @@ public class OverallCalculator : MonoBehaviour {
 				weekWordsDisplay.text = "";
 				numWeeksDisplay.text = "";
 
-				year.amountForYear = 0;
+				amount = 0;
 			}
 		}		
 	}
 
+	public int GetAmount() {
+		return amount;
+	}
 
-	public static string NumToString(int num) {
+
+	public static string NumToMoneyString(int num) {
 		string s = "";
-		if (num < 0)
-			s += "-";
+		int number = num;
+		if (num < 0) 
+			number = -number;
 		if (num == 0)
 			return "0";
 		int place = 0;
-		int i = num;
-		while (Mathf.Pow(10, place) < num) {
+		int i = number;
+		while (Mathf.Pow(10, place) <= number) {
 
 			int next = i % 10;
 			s = next + s;
 
 			i = i / 10;
 
-			if ((place + 1) % 3 == 0 && Mathf.Pow(10, place + 1) < num)
+			if ((place + 1) % 3 == 0 && Mathf.Pow(10, place + 1) <= number)
 				s = "," + s;
 
 			place++;
 		}
+		s = "$" + s;
+		if (num < 0)
+			s = "-" + s;
 		return s;
 	}
 }
