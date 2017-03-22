@@ -26,19 +26,8 @@ public class YearScrollController : MonoBehaviour {
 		weekControllers = new WeekInputController[52];
 		activeWeeks = new bool[52];
 
-		for (int i = 0; i < 52; i++) {
-			GameObject go = Instantiate(weekInput, rt);
-			RectTransform rect = go.GetComponent<RectTransform>();
-			rect.anchoredPosition = new Vector2(i * 195 + 225, 16);
+		//OriginalSetup();
 
-			WeekInputController wic = go.GetComponent<WeekInputController>();
-
-			wic.weekNumber = i + 1;
-
-			weeks[i] = go;
-			weekControllers[i] = wic;
-			activeWeeks[i] = true;
-		}
 	}
 	
 	// Update is called once per frame
@@ -54,6 +43,39 @@ public class YearScrollController : MonoBehaviour {
 
 		UpdateWeeklyYearlyVariance();
 
+	}
+
+	private void OriginalSetup() {
+		for (int i = 0; i < 52; i++) {
+			GameObject go = Instantiate(weekInput, rt);
+			RectTransform rect = go.GetComponent<RectTransform>();
+			rect.anchoredPosition = new Vector2(i * 195 + 225, 16);
+
+			WeekInputController wic = go.GetComponent<WeekInputController>();
+
+			wic.weekNumber = i + 1;
+
+			weeks[i] = go;
+			weekControllers[i] = wic;
+			activeWeeks[i] = true;
+		}
+	}
+
+	private void QuarterSetup() {
+		for (int i = 0; i < 52; i++) {
+			RectTransform quarterRT = quarterHolders[i / 13].GetComponent<RectTransform>();
+			GameObject go = Instantiate(weekInput, quarterRT);
+			RectTransform rect = go.GetComponent<RectTransform>();
+			rect.anchoredPosition = new Vector2(i * 195 + 225, 16);
+
+			WeekInputController wic = go.GetComponent<WeekInputController>();
+
+			wic.weekNumber = i + 1;
+
+			weeks[i] = go;
+			weekControllers[i] = wic;
+			activeWeeks[i] = true;
+		}
 	}
 
 	public void UpdateActiveWeeks() {
