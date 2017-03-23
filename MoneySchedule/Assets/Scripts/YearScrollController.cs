@@ -66,7 +66,7 @@ public class YearScrollController : MonoBehaviour {
 			RectTransform quarterRT = quarterHolders[i / 13].GetComponent<RectTransform>();
 			GameObject go = Instantiate(weekInput, quarterRT);
 			RectTransform rect = go.GetComponent<RectTransform>();
-			rect.anchoredPosition = new Vector2(((i % 13) * 195) + 225, 16);
+			rect.anchoredPosition = new Vector2(((i % 13) * 195) + 150, 16);
 
 			WeekInputController wic = go.GetComponent<WeekInputController>();
 
