@@ -18,6 +18,9 @@ public class YearScrollController : MonoBehaviour {
 
 	private int weeklyAmount;
 
+	private bool[] quarterExpanded;
+	private bool[] quarterExpanding;
+
 	// Use this for initialization
 	void Start () {
 		rt = GetComponent<RectTransform>();
@@ -25,6 +28,9 @@ public class YearScrollController : MonoBehaviour {
 		weeks = new GameObject[52];
 		weekControllers = new WeekInputController[52];
 		activeWeeks = new bool[52];
+
+		quarterExpanded = new bool[4] {true, true, true, true};
+		quarterExpanding = new bool[4];
 
 		//OriginalSetup();
 		QuarterSetup();
@@ -66,7 +72,14 @@ public class YearScrollController : MonoBehaviour {
 			RectTransform quarterRT = quarterHolders[i / 13].GetComponent<RectTransform>();
 			GameObject go = Instantiate(weekInput, quarterRT);
 			RectTransform rect = go.GetComponent<RectTransform>();
-			rect.anchoredPosition = new Vector2(((i % 13) * 195) + 150, 16);
+
+			//if (i / 13 == 0)
+			//	rect.anchoredPosition = new Vector2(((i % 13) * 195) + 150, 16);
+			//else {
+			rect.anchorMin = new Vector2(((float)(i % 13) / 13f) + (1f / 26f), .61f);
+			rect.anchorMax = new Vector2(((float)(i % 13) / 13f) + (1f / 26f), .61f);
+			rect.anchoredPosition = Vector2.zero;
+			//}
 
 			WeekInputController wic = go.GetComponent<WeekInputController>();
 
@@ -104,5 +117,29 @@ public class YearScrollController : MonoBehaviour {
 
 	public void SetAmount(int newAmount) {
 		yearAmount = newAmount;
+	}
+
+	public void ExpandContractQuarter(int quarter) {
+		if (quarter >= 0 && quarter < 4) {
+			if (!quarterExpanding[quarter]) {
+				if (quarterExpanded[quarter])
+					StartCoroutine(ContractQuarter(quarter));
+				else
+					StartCoroutine(ExpandQuarter(quarter));
+			}
+		}
+		else {
+			Debug.Log("Error, trying to expand/contract something that isn't a quarter");
+		}
+	}
+
+	public IEnumerator ExpandQuarter(int quarter) {
+	
+		yield return null;
+	}
+
+	public IEnumerator ContractQuarter(int quarter) {
+
+		yield return null;
 	}
 }
