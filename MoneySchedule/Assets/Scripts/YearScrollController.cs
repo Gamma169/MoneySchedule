@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class YearScrollController : MonoBehaviour {
 
 	public GameObject weekInput;
 	public GameObject[] quarterHolders;
+	public Text[] buttonTexts;
 
 	public GameObject[] weeks;
 	public WeekInputController[] weekControllers;
@@ -122,10 +124,14 @@ public class YearScrollController : MonoBehaviour {
 	public void ExpandContractQuarter(int quarter) {
 		if (quarter >= 0 && quarter < 4) {
 			if (!quarterExpanding[quarter]) {
+
+				/*
 				if (quarterExpanded[quarter])
 					StartCoroutine(ContractQuarter(quarter));
 				else
 					StartCoroutine(ExpandQuarter(quarter));
+				*/
+				StartCoroutine(ExpandContractQuarterHelper(quarter, !quarterExpanded[quarter]));
 			}
 		}
 		else {
@@ -133,13 +139,37 @@ public class YearScrollController : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator ExpandQuarter(int quarter) {
-	
-		yield return null;
-	}
+	public IEnumerator ExpandContractQuarterHelper(int quarter, bool expand) {
+		quarterExpanding[quarter] = true;
 
-	public IEnumerator ContractQuarter(int quarter) {
+		float overTime = .3f;
+		int quarterOriginalSize = 2655;
+		CanvasGroup cvg = quarterHolders[quarter].GetComponent<CanvasGroup>();
+		RectTransform rt = quarterHolders[quarter].GetComponent<RectTransform>();
 
-		yield return null;
+		cvg.interactable = expand;
+		cvg.blocksRaycasts = expand;
+
+		for (float i = expand ? 0 : overTime; expand ? (i < overTime) : (i > 0); i += expand ? Time.deltaTime : -Time.deltaTime) {
+
+			float lerpVal = i / overTime;
+
+			rt.sizeDelta = new Vector2(Mathf.Lerp(0, quarterOriginalSize, lerpVal), 0);
+			rt.anchoredPosition = new Vector2(Mathf.Lerp(75, 0, lerpVal), 0);
+
+			cvg.alpha = lerpVal;
+
+			yield return null;
+		}
+
+
+		rt.sizeDelta = new Vector2(expand ? quarterOriginalSize : 0, 0);
+		rt.anchoredPosition = new Vector2(expand ? 0 : 75, 0);
+		cvg.alpha = expand ? 1 : 0;
+
+		buttonTexts[quarter].text = (expand ? "Contract" : "Expand") + "\nQuarter " + (quarter + 1);
+
+		quarterExpanding[quarter] = false;
+		quarterExpanded[quarter] = !quarterExpanded[quarter];
 	}
 }
