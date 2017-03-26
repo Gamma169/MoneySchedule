@@ -8,6 +8,7 @@ public class YearScrollController : MonoBehaviour {
 	public GameObject weekInput;
 	public GameObject[] quarterHolders;
 	public Text[] buttonTexts;
+	public Text[] variancesTexts;
 
 	public GameObject[] weeks;
 	public WeekInputController[] weekControllers;
@@ -78,8 +79,8 @@ public class YearScrollController : MonoBehaviour {
 			//if (i / 13 == 0)
 			//	rect.anchoredPosition = new Vector2(((i % 13) * 195) + 150, 16);
 			//else {
-			rect.anchorMin = new Vector2(((float)(i % 13) / 13f) + (1f / 26f), .61f);
-			rect.anchorMax = new Vector2(((float)(i % 13) / 13f) + (1f / 26f), .61f);
+			rect.anchorMin = new Vector2((((float)(i % 13) / 13f) + (1f / 26f) ) * 0.9f, .61f);
+			rect.anchorMax = new Vector2((((float)(i % 13) / 13f) + (1f / 26f) ) * 0.9f, .61f);
 			rect.anchoredPosition = Vector2.zero;
 			//}
 
@@ -157,6 +158,9 @@ public class YearScrollController : MonoBehaviour {
 			rt.sizeDelta = new Vector2(Mathf.Lerp(0, quarterOriginalSize, lerpVal), 0);
 			rt.anchoredPosition = new Vector2(Mathf.Lerp(75, 0, lerpVal), 0);
 
+			variancesTexts[2 * quarter].color = Color.Lerp(Color.clear, Color.black, lerpVal);
+			variancesTexts[(2 * quarter) + 1].color = Color.Lerp(Color.clear, Color.black, lerpVal);
+
 			cvg.alpha = lerpVal;
 
 			yield return null;
@@ -168,6 +172,15 @@ public class YearScrollController : MonoBehaviour {
 		cvg.alpha = expand ? 1 : 0;
 
 		buttonTexts[quarter].text = (expand ? "Contract" : "Expand") + "\nQuarter " + (quarter + 1);
+
+		variancesTexts[2 * quarter].color = expand ? Color.black : Color.clear;
+		variancesTexts[(2 * quarter) + 1].color = expand ? Color.black : Color.clear;
+
+		// I have this in here because it is doing a weird bouncing thing when expanded and don't want it to do that
+		yield return null;
+		rt.sizeDelta = new Vector2(expand ? quarterOriginalSize : 0, 0);
+		rt.anchoredPosition = new Vector2(expand ? 2 : 75, 0);
+
 
 		quarterExpanding[quarter] = false;
 		quarterExpanded[quarter] = !quarterExpanded[quarter];
