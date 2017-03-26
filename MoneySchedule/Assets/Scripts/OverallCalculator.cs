@@ -18,7 +18,8 @@ public class OverallCalculator : MonoBehaviour {
 	public Text weekWordsDisplay;
 	public Text numWeeksDisplay;
 
-
+	public GameObject NZHead;
+	public GameObject NZHeadCont;
 	//public Text label2;
 
 	private string enterNum = "Enter yearly amount to calculate weekly amount";
@@ -30,12 +31,13 @@ public class OverallCalculator : MonoBehaviour {
 	private int amount;
 	private bool error;
 
+	// For the heads Easter Egg
+	private ArrayList headsList;
+
 	// Use this for initialization
 	void Start () {
-			
-		//print(NumToString(3500000));
 
-
+		headsList = new ArrayList();
 	}
 
 	// Update is called once per frame
@@ -43,12 +45,35 @@ public class OverallCalculator : MonoBehaviour {
 
 		UpdateTexts();
 
+		// This is for the heads easter egg
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			while (headsList.Count > 0) {
+				Destroy((GameObject)headsList[0]);
+				headsList.RemoveAt(0);
+			}
+		}
+		// End Easter Egg
+
 	}
 
 	private void UpdateTexts() {
 		string s = inputAmt.text;
 
-		if (s.Length == 0) {
+		// These are a heads easter egg.  Should probably be removed in production
+		if (s.Equals("poop")) {
+			if (Input.GetMouseButtonDown(1)) {
+				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				Instantiate(NZHead, pos, Quaternion.identity);
+			}
+		}
+		else if (s.Equals("poopies")) {
+			if (Input.GetMouseButtonDown(1)) {
+				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				headsList.Add(Instantiate(NZHeadCont, pos, Quaternion.identity));
+			}
+		}
+		// End of EE
+		else if (s.Length == 0) {
 			mainTextDisplay.color = regCol;
 			mainTextDisplay.text = enterNum;
 			overallMoneyDisplay.text = "";

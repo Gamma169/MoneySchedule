@@ -81,7 +81,8 @@ public class YearScrollController : MonoBehaviour {
 			//else {
 			rect.anchorMin = new Vector2((((float)(i % 13) / 13f) + (1f / 26f) ) * 0.9f, .61f);
 			rect.anchorMax = new Vector2((((float)(i % 13) / 13f) + (1f / 26f) ) * 0.9f, .61f);
-			rect.anchoredPosition = Vector2.zero;
+			rect.anchoredPosition = Vector3.zero;
+			rect.localScale = new Vector3(1, 1, 1);
 			//}
 
 			WeekInputController wic = go.GetComponent<WeekInputController>();
