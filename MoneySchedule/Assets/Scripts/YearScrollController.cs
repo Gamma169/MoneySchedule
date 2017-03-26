@@ -7,6 +7,7 @@ public class YearScrollController : MonoBehaviour {
 
 	public GameObject weekInput;
 	public GameObject[] quarterHolders;
+	public QuarterDisplay[] quarterEndlineSummaries;
 	public Text[] buttonTexts;
 	public Text[] variancesTexts;
 
@@ -51,7 +52,7 @@ public class YearScrollController : MonoBehaviour {
 		weeklyAmount = yearAmount / numWeeks;
 
 		UpdateWeeklyYearlyVariance();
-
+		UpdateQuarterSummary();
 	}
 
 	private void OriginalSetup() {
@@ -116,6 +117,26 @@ public class YearScrollController : MonoBehaviour {
 			currentYearVariance += weekControllers[i].weeklyVariance;
 			weekControllers[i].yearlyVariance = currentYearVariance;
 		
+		}
+	}
+
+	public void UpdateQuarterSummary() {
+		for (int i = 0; i < 4; i++) {
+			int activeWeeks = 0;
+			int positiveWeeks = 0;
+			int quarterlyVariance = 0;
+			for (int j = i * 13; j < (i * 13) + 13; j++) {
+				if (weekControllers[j].isActive)
+					activeWeeks++;
+
+				if (weekControllers[j].weeklyVariance >= 0)
+					positiveWeeks++;
+
+				quarterlyVariance += weekControllers[j].weeklyVariance;
+			}
+
+			int yearlyVariance = weekControllers[((i + 1) * 13) - 1].yearlyVariance;
+			quarterEndlineSummaries[i].UpdateValues(activeWeeks, positiveWeeks, quarterlyVariance, yearlyVariance);
 		}
 	}
 
