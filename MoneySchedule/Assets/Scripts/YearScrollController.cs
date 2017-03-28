@@ -7,7 +7,10 @@ public class YearScrollController : MonoBehaviour {
 
 	public GameObject weekInput;
 	public GameObject[] quarterHolders;
+	public GameObject[] quarterFullSummaries;
 	public QuarterDisplay[] quarterEndlineSummaries;
+	public QuarterDisplay[] quarterFullSummariesDisplays;
+	public WeekBreakdownController[] weekBreakdownControllers;
 	public Text[] buttonTexts;
 	public Text[] variancesTexts;
 
@@ -22,6 +25,7 @@ public class YearScrollController : MonoBehaviour {
 
 	private int weeklyAmount;
 
+	private ScrollRect[] scrollRects;
 	private bool[] quarterExpanded;
 	private bool[] quarterExpanding;
 
@@ -33,6 +37,7 @@ public class YearScrollController : MonoBehaviour {
 		weekControllers = new WeekInputController[52];
 		activeWeeks = new bool[52];
 
+		scrollRects = gameObject.GetComponentsInChildren<ScrollRect>();
 		quarterExpanded = new bool[4] {true, true, true, true};
 		quarterExpanding = new bool[4];
 
@@ -53,6 +58,8 @@ public class YearScrollController : MonoBehaviour {
 
 		UpdateWeeklyYearlyVariance();
 		UpdateQuarterSummary();
+
+		UpdateWeekBreakdowns();
 	}
 
 	private void OriginalSetup() {
@@ -137,6 +144,19 @@ public class YearScrollController : MonoBehaviour {
 
 			int yearlyVariance = weekControllers[((i + 1) * 13) - 1].yearlyVariance;
 			quarterEndlineSummaries[i].UpdateValues(activeWeeks, positiveWeeks, quarterlyVariance, yearlyVariance);
+			quarterFullSummariesDisplays[i].UpdateValues(activeWeeks, positiveWeeks, quarterlyVariance, yearlyVariance);
+		}
+	}
+
+	public void UpdateWeekBreakdowns() {
+		for (int i = 0; i < 4; i++) {
+			//if (weekControllers[i].isActive)
+				weekBreakdownControllers[i].UpdateVariance(weeklyAmount);
+			//else
+				//weekBreakdownControllers[i].UpdateVariance(0);
+			for (int j = 0; j < 13; j++) {
+				weekBreakdownControllers[i].UpdateWeekAmount(j, weekControllers[(i * 13) + j].isActive,  weekControllers[(i * 13) + j].amountMadeThisWeek);
+			}
 		}
 	}
 
@@ -170,8 +190,13 @@ public class YearScrollController : MonoBehaviour {
 		CanvasGroup cvg = quarterHolders[quarter].GetComponent<CanvasGroup>();
 		RectTransform rt = quarterHolders[quarter].GetComponent<RectTransform>();
 
+		CanvasGroup scvg = quarterFullSummaries[quarter].GetComponent<CanvasGroup>();
+
 		cvg.interactable = expand;
 		cvg.blocksRaycasts = expand;
+
+		scvg.interactable = !expand;
+		scvg.blocksRaycasts = !expand;
 
 		for (float i = expand ? 0 : overTime; expand ? (i < overTime) : (i > 0); i += expand ? Time.deltaTime : -Time.deltaTime) {
 
@@ -184,6 +209,7 @@ public class YearScrollController : MonoBehaviour {
 			variancesTexts[(2 * quarter) + 1].color = Color.Lerp(Color.clear, Color.black, lerpVal);
 
 			cvg.alpha = lerpVal;
+			scvg.alpha = 1 - lerpVal;
 
 			yield return null;
 		}
@@ -192,6 +218,7 @@ public class YearScrollController : MonoBehaviour {
 		rt.sizeDelta = new Vector2(expand ? quarterOriginalSize : 0, 0);
 		rt.anchoredPosition = new Vector2(expand ? 0 : 75, 0);
 		cvg.alpha = expand ? 1 : 0;
+		scvg.alpha = expand ? 0 : 1;
 
 		buttonTexts[quarter].text = (expand ? "Contract" : "Expand") + "\nQuarter " + (quarter + 1);
 
@@ -203,6 +230,7 @@ public class YearScrollController : MonoBehaviour {
 		rt.sizeDelta = new Vector2(expand ? quarterOriginalSize : 0, 0);
 		rt.anchoredPosition = new Vector2(expand ? 2 : 75, 0);
 
+		scrollRects[quarter].enabled = expand;
 
 		quarterExpanding[quarter] = false;
 		quarterExpanded[quarter] = !quarterExpanded[quarter];

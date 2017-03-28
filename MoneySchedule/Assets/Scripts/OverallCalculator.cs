@@ -61,13 +61,13 @@ public class OverallCalculator : MonoBehaviour {
 
 		// These are a heads easter egg.  Should probably be removed in production
 		if (s.Equals("poop")) {
-			if (Input.GetMouseButtonDown(1)) {
+			if (Input.GetMouseButtonDown(1) || (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))) {
 				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				Instantiate(NZHead, pos, Quaternion.identity);
 			}
 		}
 		else if (s.Equals("poopies")) {
-			if (Input.GetMouseButtonDown(1)) {
+			if ((Input.GetMouseButtonDown(1) || (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))) && headsList.Count < 50) {
 				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				headsList.Add(Instantiate(NZHeadCont, pos, Quaternion.identity));
 			}
